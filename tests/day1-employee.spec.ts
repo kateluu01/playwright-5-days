@@ -99,7 +99,11 @@ test('Navigate to Recruitment page 01', async({page}) => {
  
   await recruitmentPage.clickStatusInterviewPassed();
   await recruitmentPage.clickSearch();
-  await page.waitForTimeout(2000);
+  await page.waitForSelector('.oxd-loading-spinner', { state: 'detached' });
+
+// Đợi dòng dữ liệu đầu tiên trong bảng hiển thị
+const firstRow = page.locator('.oxd-table-card').first();
+await firstRow.waitFor({ state: 'visible', timeout: 15000 });
 });
   test ('Navigate to Recruitment page', async({page})=> {
 
@@ -109,7 +113,12 @@ test('Navigate to Recruitment page 01', async({page}) => {
  
   await recruitmentPage.clickStatusRejected();
   await recruitmentPage.clickSearch();
-  await page.waitForTimeout(2000);
+  //await page.waitForTimeout(2000);
+  await page.waitForSelector('.oxd-loading-spinner', { state: 'detached' });
+
+// Đợi dòng dữ liệu đầu tiên trong bảng hiển thị
+const firstRow = page.locator('.oxd-table-card').first();
+await firstRow.waitFor({ state: 'visible', timeout: 15000 });
   const tableBody = page.locator('.oxd-table-body');
     await tableBody.waitFor({ state: 'visible' });
 

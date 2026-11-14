@@ -7,7 +7,7 @@ export class TimePage {
     constructor(page: Page)
     { 
         this.page=page;
-        this.viewBtn=page.getByRole('button', {name: 'View'});
+        this.viewBtn=page.getByRole('button', {name: 'View'}).first();
 
 
     }
