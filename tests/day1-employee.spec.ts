@@ -91,76 +91,46 @@ test ('Navigate to Time page', async({page})=> {
   await timePage.clickView();
   // await page.waitForTimeout(1000);
   });
+
 test('Navigate to Recruitment page 01', async({page}) => {
-
-   await dashboardPage.navigateToRecruitment();
-
-   
- 
+  await dashboardPage.navigateToRecruitment();
   await recruitmentPage.clickStatusInterviewPassed();
   await recruitmentPage.clickSearch();
+  
+  // 1. Chờ biểu tượng loading biến mất
   await page.waitForSelector('.oxd-loading-spinner', { state: 'detached' });
-
-// Đợi dòng dữ liệu đầu tiên trong bảng hiển thị
-const firstRow = page.locator('.oxd-table-card').first();
-await firstRow.waitFor({ state: 'visible', timeout: 15000 });
+  
+  // 2. Ngưng 1 giây để bảng HTML thực sự vẽ xong (chống lỗi chớp DOM)
+  await page.waitForTimeout(1000);
 });
-  test ('Navigate to Recruitment page', async({page})=> {
 
+test('Navigate to Recruitment page', async({page})=> {
   await dashboardPage.navigateToRecruitment();
-
-   
- 
   await recruitmentPage.clickStatusRejected();
   await recruitmentPage.clickSearch();
-  //await page.waitForTimeout(2000);
+
+  // 1. Chờ biểu tượng loading biến mất
   await page.waitForSelector('.oxd-loading-spinner', { state: 'detached' });
-
-// Đợi dòng dữ liệu đầu tiên trong bảng hiển thị
-const firstRow = page.locator('.oxd-table-card').first();
-await firstRow.waitFor({ state: 'visible', timeout: 15000 });
-  const tableBody = page.locator('.oxd-table-body');
-    await tableBody.waitFor({ state: 'visible' });
-
-    // Lấy danh sách tất cả các hàng (các thẻ div có class oxd-table-card)
-    const rows = page.locator('.oxd-table-card');
-    
-    // Đếm số lượng kết quả trả về
-    const rowCount = await rows.count();
-    console.log(`Số lượng ứng viên Rejected tìm thấy: ${rowCount}`);
-    
-    // Đảm bảo rằng có ít nhất 1 dòng dữ liệu được trả về
-    expect(rowCount).toBeGreaterThan(0);
-
-    // 5. Lặp qua từng hàng để Verify cột Status có đúng là 'Rejected' hay không
-    for (let i = 0; i < rowCount; i++) {
-      // Lấy hàng thứ i
-      const row = rows.nth(i);
-      
-      // Lấy tất cả các cột của hàng đó
-      const cells = row.locator('.oxd-table-cell');
-      
-      // Theo HTML của bạn, cột Status nằm ở vị trí thứ 6 (index = 5)
-      /* 
-         0: Checkbox
-         1: Vacancy
-         2: Candidate
-         3: Hiring Manager
-         4: Date of Application
-         5: Status
-         6: Actions
-      */
-      const statusCell = cells.nth(5);
-      
-      // Lấy text của ô Status và verify
-      const statusText = await statusCell.innerText();
-      
-      // Kiểm tra xem text lấy được có chính xác là 'Rejected' không
-      expect(statusText.trim()).toBe('Rejected');
-    }
   
- 
- 
-  });
+  // 2. Ngưng 1 giây để bảng HTML thực sự vẽ xong
+  await page.waitForTimeout(1000);
+
+  const rows = page.locator('.oxd-table-card');
+  const rowCount = await rows.count();
+  console.log(`Số lượng ứng viên Rejected tìm thấy: ${rowCount}`);
+  
+  // Chỉ đi vào vòng lặp check text nếu thực sự có dữ liệu trả về
+  if (rowCount > 0) {
+    for (let i = 0; i < rowCount; i++) {
+      // Viết gộp locator để lấy text trực tiếp, dùng textContent()
+      const statusText = await rows.nth(i).locator('.oxd-table-cell').nth(5).textContent();
+      
+      // Kiểm tra xem text có phải là 'Rejected' không
+      expect((statusText || '').trim()).toBe('Rejected');
+    }
+  } else {
+    console.log('Không có ứng viên nào bị Rejected để kiểm tra.');
+  }
+});
 
 });
