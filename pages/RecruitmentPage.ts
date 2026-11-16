@@ -12,6 +12,7 @@ export class RecruitmentPage{
     readonly selectStatus: Locator;
     readonly selectStatusRejected: Locator;
     readonly selectStatusInterviewPassed: Locator;
+    readonly selectStatusShortlisted: Locator;
 
     constructor(page: Page)
     {
@@ -25,7 +26,7 @@ export class RecruitmentPage{
         this.selectStatus=page.locator('.oxd-input-group').filter({ hasText: 'Status' }).locator('.oxd-select-text');
         this.selectStatusRejected=page.getByRole('listbox').getByRole('option', { name: 'Rejected' });
         this.selectStatusInterviewPassed=page.getByRole('listbox').getByRole('option',{name: 'Interview Passed'});
-        
+        this.selectStatusShortlisted=page.getByRole('listbox').getByRole('option', {name: 'Shortlisted'});
 
     }
 
@@ -58,5 +59,10 @@ export class RecruitmentPage{
         await this.selectStatus.click();
         await this.selectStatusInterviewPassed.click();
     }
+     async clickStatusShorlisted()
+     {
+        await this.selectStatus.click();
+        await this.selectStatusShortlisted.click();
+     }
 
 }
