@@ -92,7 +92,7 @@ test ('Navigate to Time page', async({page})=> {
   // await page.waitForTimeout(1000);
   });
 
-test('Navigate to Recruitment page 01', async({page}) => {
+test('Navigate to Recruitment page to search', async({page}) => {
   await dashboardPage.navigateToRecruitment();
   await recruitmentPage.clickStatusInterviewPassed();
   await recruitmentPage.clickSearch();
@@ -102,6 +102,9 @@ test('Navigate to Recruitment page 01', async({page}) => {
   
   // 2. Ngưng 1 giây để bảng HTML thực sự vẽ xong (chống lỗi chớp DOM)
   await page.waitForTimeout(1000);
+    await page.locator('.oxd-icon.bi-calendar').first().click();
+  await page.getByText('19', { exact: true }).click();
+  await page.getByRole('button', { name: 'Search' }).click();
 });
 
 test('Search with Shortlisted', async({page})=>{
