@@ -13,6 +13,7 @@ export class RecruitmentPage{
     readonly selectStatusRejected: Locator;
     readonly selectStatusInterviewPassed: Locator;
     readonly selectStatusShortlisted: Locator;
+    readonly selectInterviewScheduled: Locator;
 
     constructor(page: Page)
     {
@@ -27,6 +28,7 @@ export class RecruitmentPage{
         this.selectStatusRejected=page.getByRole('listbox').getByRole('option', { name: 'Rejected' });
         this.selectStatusInterviewPassed=page.getByRole('listbox').getByRole('option',{name: 'Interview Passed'});
         this.selectStatusShortlisted=page.getByRole('listbox').getByRole('option', {name: 'Shortlisted'});
+        this.selectInterviewScheduled= page.getByRole('listbox').getByRole('option', {name: 'Interview Scheduled'});
 
     }
 
@@ -64,5 +66,9 @@ export class RecruitmentPage{
         await this.selectStatus.click();
         await this.selectStatusShortlisted.click();
      }
-
+     async clickInterviewScheduled()
+     {
+        await this.selectStatus.click();
+        await this.selectInterviewScheduled.click();
+     }
 }

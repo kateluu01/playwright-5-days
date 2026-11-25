@@ -135,6 +135,34 @@ test('Search with Shortlisted', async({page})=>{
   }
 
 });
+test('Search with Interview Scheduled', async({page})=>{
+  await dashboardPage.navigateToRecruitment();
+  await recruitmentPage.clickInterviewScheduled();
+  await recruitmentPage.clickSearch();
+    // 1. Chờ biểu tượng loading biến mất
+ // await page.waitForSelector('.oxd-loading-spinner', { state: 'detached' });
+  
+  // 2. Ngưng 1 giây để bảng HTML thực sự vẽ xong
+  await page.waitForTimeout(1000);
+  const rows = page.locator('.oxd-table-card');
+  const rowCount = await rows.count();
+  console.log(`Số lượng ứng viên Interview Scheduled tìm thấy: ${rowCount}`);
+
+  
+  // Chỉ đi vào vòng lặp check text nếu thực sự có dữ liệu trả về
+  if (rowCount > 0) {
+    for (let i = 0; i < rowCount; i++) {
+      // Viết gộp locator để lấy text trực tiếp, dùng textContent()
+      const statusText = await rows.nth(i).locator('.oxd-table-cell').nth(5).textContent();
+      
+      // Kiểm tra xem text có phải là 'Rejected' không
+      expect((statusText || '').trim()).toBe('Interview Scheduled');
+    }
+  } else {
+    console.log('Không có Interview Scheduled để kiểm tra.');
+  }
+
+});
 
 test('Navigate to Recruitment page', async({page})=> {
   await dashboardPage.navigateToRecruitment();
